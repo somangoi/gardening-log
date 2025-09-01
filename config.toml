@@ -1,0 +1,76 @@
+baseURL = "https://somihwang.com"
+languageCode = "ko-kr"
+title = "개발 블로그"
+theme = "PaperMod"
+
+# RSS 설정
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+page = ["HTML"]
+section = ["HTML", "RSS"]
+
+[outputFormats.RSS]
+mediatype = "application/rss+xml"
+baseName = "index"  # RSS를 /index.xml로 생성
+
+# 코드 하이라이팅 설정
+[markup]
+  [markup.highlight]
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ""
+    lineAnchors = ""
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = false
+    style = "github"
+    tabWidth = 4
+
+# PaperMod 테마 설정
+[params]
+  env = "production"
+  title = "개발 블로그"
+  description = "개발 관련 글을 작성하는 블로그입니다"
+  author = "Your Name"
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowRssButtonInSectionTermList = true
+  
+  # 소셜 미디어
+  [[params.socialIcons]]
+  name = "github"
+  url = "https://github.com/your-username"
+
+  [[params.socialIcons]]
+  name = "rss"
+  url = "/index.xml"
+
+# 메뉴 설정
+[[menu.main]]
+identifier = "home"
+name = "Home"
+url = "/"
+weight = 10
+
+[[menu.main]]
+identifier = "posts"
+name = "Posts"
+url = "/posts/"
+weight = 20
+
+[[menu.main]]
+identifier = "tags"
+name = "Tags"
+url = "/tags/"
+weight = 30
+
+[[menu.main]]
+identifier = "categories"
+name = "Categories"
+url = "/categories/"
+weight = 40
