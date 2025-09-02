@@ -1,4 +1,4 @@
-# 개발 블로그 - somihwang.com
+# 정원가꾸기 - somihwang.com
 
 Hugo를 사용한 개발 블로그입니다.
 

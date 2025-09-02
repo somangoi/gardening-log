@@ -1,6 +1,6 @@
 baseURL = "https://somihwang.com"
 languageCode = "ko-kr"
-title = "개발 블로그"
+title = "정원가꾸기"
 theme = "PaperMod"
 
 # RSS 설정
@@ -31,20 +31,24 @@ baseName = "index"  # RSS를 /index.xml로 생성
 # PaperMod 테마 설정
 [params]
   env = "production"
-  title = "개발 블로그"
-  description = "개발 관련 글을 작성하는 블로그입니다"
-  author = "Your Name"
+  title = "정원가꾸기"
+  description = "정원을 가꾸는 마음으로 배웁니다."
+  author = "황소미"
   ShowReadingTime = true
   ShowShareButtons = true
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
   ShowRssButtonInSectionTermList = true
-  
+
+  # Assets
+  [params.assets]
+  favicon = "/favicon.ico"
+
   # 소셜 미디어
   [[params.socialIcons]]
   name = "github"
-  url = "https://github.com/your-username"
+  url = "https://github.com/somangoi"
 
   [[params.socialIcons]]
   name = "rss"
@@ -74,3 +78,9 @@ identifier = "categories"
 name = "Categories"
 url = "/categories/"
 weight = 40
+
+[[menu.main]]
+identifier = "portfolio"
+name = "Portfolio"
+url = "/portfolio/"
+weight = 60
