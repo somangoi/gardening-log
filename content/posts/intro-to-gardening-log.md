@@ -1,10 +1,10 @@
 ---
 title: "정원가꾸기"
 date: 2025-09-18T12:32:57+09:00
-draft: true
+draft: false
 tags: []
 categories: []
-description: ""
+description: "블로그의 이름이 '정원가꾸기'인 이유"
 ---
 
 ## 정원을 가꾸는 알로시아 이야기
