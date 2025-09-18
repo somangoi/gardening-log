@@ -3,7 +3,7 @@ title: "프론트엔드 개발자 황소미입니다"
 date: 2025-08-31T10:00:00+09:00
 draft: false
 type: "about"
-description: "황소미의 포트폴리오 - 문제를 정확히 정의하고 해결하는 프론트엔드 개발자"
+description: ""
 showToc: false
 ---
 
