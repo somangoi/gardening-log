@@ -55,16 +55,11 @@ baseName = "index"  # RSS를 /index.xml로 생성
   url = "/index.xml"
 
 # 메뉴 설정
-[[menu.main]]
-identifier = "home"
-name = "Home"
-url = "/"
-weight = 10
 
 [[menu.main]]
 identifier = "posts"
 name = "Posts"
-url = "/posts/"
+url = "/"
 weight = 20
 
 [[menu.main]]
