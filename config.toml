@@ -33,13 +33,13 @@ baseName = "index"  # RSS를 /index.xml로 생성
   env = "production"
   title = "정원가꾸기"
   description = "정원을 가꾸는 마음으로 배웁니다."
-  author = "황소미"
   ShowReadingTime = true
-  ShowShareButtons = true
+  ShowShareButtons = false
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
   ShowRssButtonInSectionTermList = true
+  disableSpecial1stPost = true
 
   # Assets
   [params.assets]
