@@ -1,5 +1,5 @@
 ---
-title: "프론트엔드 개발자 황소미입니다"
+title: "Somi Hwang"
 date: 2025-08-31T10:00:00+09:00
 draft: false
 type: "about"
@@ -32,9 +32,9 @@ _동료들은 저를 이렇게 평가합니다:_
 
 ---
 
-총 경력 3년 8개월
+총 경력 3년 9개월
 
-- `2021.11-현재` [비브리지 슬리드팀](https://home.slid.cc/) Frontend Engineer (3년 8개월 | 정규직)
+- `2021.11-2025.06` [비브리지 슬리드팀](https://home.slid.cc/) Frontend Engineer (3년 8개월 | 정규직)
 - `2021.08-2021.08` [고피자](https://gopizza.kr/) Frontend Engineer 인턴 (1개월 | 인턴)
 
 ## Work Experience
