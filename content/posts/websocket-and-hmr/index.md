@@ -149,4 +149,4 @@ Vite는 전혀 다른 접근을 취한다. 이는 Vite가 개발된 배경을 �
 - https://ably.com/topic/websockets-history
 - https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers
 - https://vite.dev/guide/why
-- https://vite.dev/guide/api-hmr?utm_source=chatgpt.com
+- https://vite.dev/guide/api-hmr
