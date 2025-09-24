@@ -25,11 +25,11 @@ description: ""
 
 오시리스는 내부적으로 Database라는 개념을 사용하여 상태를 “fact” 형태로 기록한다. 예를 들어 개발자가 아래와 같은 규칙을 작성하면,
 
-```jsx
+```prolog
 IF;
-CharacterJoinedParty(_Char);
+  CharacterJoinedParty(_Char);
 THEN;
-DB_InParty(_Char);
+  DB_InParty(_Char);
 ```
 
 엔진은 이를 해석해 “캐릭터가 파티에 합류했다”는 사실을 `DB_InParty` 테이블에 기록한다. 여기서 Database는 우리가 아는 MySQL 같은 범용 DB가 아니라, 오시리스 스크립트 내부에서만 쓰이는 Prolog fact와 비슷한 구조의 경량화된 fact store이다.
