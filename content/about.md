@@ -1,10 +1,10 @@
 ---
 title: "Somi Hwang"
-date: 2025-08-31T10:00:00+09:00
 draft: false
 type: "about"
 description: ""
 showToc: false
+showReadingTime: false
 ---
 
 [somi.c.hwang@gmail.com](mailto:somi.c.hwang@gmail.com) | [GitHub](https://github.com/somangoi) | [LinkedIn](https://www.linkedin.com/in/somi-hwang/)
