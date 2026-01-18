@@ -1,5 +1,7 @@
-# Hugo build output
-/public/
+# Astro build output
+dist/
+
+# Hugo build output (legacy)
 /resources/
 
 # OS generated files
@@ -24,5 +26,8 @@ Thumbs.db
 # Dependencies
 node_modules/
 
-# Hugo cache
+# Hugo cache (legacy)
 /resources/_gen/
+
+# Astro
+.astro/

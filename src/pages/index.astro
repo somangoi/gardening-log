@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import Garden3D from '../components/Garden3D';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="정원가꾸기">
+  <Garden3D client:load />
+
+  <section>
+    <h1 class="sr-only">Posts</h1>
+    {posts.map((post) => (
+      <PostCard
+        title={post.data.title}
+        date={post.data.date}
+        description={post.data.description}
+        slug={post.slug}
+        tags={post.data.tags}
+      />
+    ))}
+  </section>
+</BaseLayout>

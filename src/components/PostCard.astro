@@ -1,0 +1,38 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  description?: string;
+  slug: string;
+  tags?: string[];
+}
+
+const { title, date, description, slug, tags } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('ko-KR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<article class="mb-8 pb-8 border-b border-gray-100 last:border-b-0">
+  <a href={`/posts/${slug}`} class="block no-underline group">
+    <h2 class="text-xl font-semibold text-gray-900 group-hover:text-blue-600 mb-2 mt-0">
+      {title}
+    </h2>
+    <time class="text-sm text-gray-500 block mb-2">{formattedDate}</time>
+    {description && (
+      <p class="text-gray-600 mb-2">{description}</p>
+    )}
+    {tags && tags.length > 0 && (
+      <div class="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+            {tag}
+          </span>
+        ))}
+      </div>
+    )}
+  </a>
+</article>
