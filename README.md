@@ -1,68 +1,56 @@
 # 정원가꾸기 - somihwang.com
 
-Hugo를 사용한 개발 블로그입니다.
+Astro + React + Tailwind CSS 기반 개발 블로그입니다.
 
-## 🚀 Quick Start
-
-### 로컬 개발
+## Quick Start
 
 ```bash
-# PaperMod 테마 설치
-git submodule add --depth=1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod
+# 의존성 설치
+npm install
 
 # 개발 서버 실행
-hugo server -D
+npm run dev
+
+# 빌드
+npm run build
+
+# 빌드 결과 미리보기
+npm run preview
 ```
 
-### 새 글 작성
+## 새 글 작성
 
-```bash
-# 새 포스트 생성
-hugo new posts/my-new-post.md
+`src/content/posts/` 폴더에 마크다운 파일을 추가합니다.
 
-# 글 작성 후 배포
-git add .
-git commit -m "Add new post"
-git push origin main
+```markdown
+---
+title: "글 제목"
+date: 2025-01-18
+draft: false
+tags: [태그1, 태그2]
+description: "글 설명"
+---
+
+본문 내용...
 ```
 
-## 🔧 기능
-
-- ✅ GitHub Pages 자동 배포
-- ✅ 커스텀 도메인 (somihwang.com)
-- ✅ HTTPS 자동 활성화
-- ✅ RSS 피드 (`/index.xml`)
-- ✅ 코드 하이라이팅
-- ✅ PaperMod 테마
-
-## 📝 배포 과정
-
-1. `main` 브랜치에 푸시
-2. GitHub Actions가 자동으로 Hugo 빌드
-3. `gh-pages` 브랜치에 배포
-4. `somihwang.com`에서 확인
-
-## 🌐 DNS 설정
-
-도메인 제공업체에서 다음 DNS 레코드를 설정하세요:
+## 프로젝트 구조
 
 ```
-Type: A
-Name: @
-Value: 185.199.108.153
-       185.199.109.153
-       185.199.110.153
-       185.199.111.153
+src/
+├── pages/              # 페이지 라우팅
+│   ├── index.astro     # 메인 페이지
+│   ├── about.astro     # About 페이지
+│   └── posts/          # 포스트 동적 라우팅
+├── content/posts/      # 마크다운 블로그 글
+├── layouts/            # 레이아웃 컴포넌트
+├── components/         # 재사용 컴포넌트
+│   ├── Header.astro
+│   ├── PostCard.astro
+│   └── Garden3D.tsx    # 3D 정원 (React)
+└── styles/             # 글로벌 스타일
 ```
 
-## 📁 프로젝트 구조
+## 배포
 
-```
-.
-├── archetypes/          # 콘텐츠 템플릿
-├── content/            # 블로그 포스트
-├── static/             # 정적 파일
-├── themes/             # Hugo 테마
-├── config.toml         # Hugo 설정
-└── .github/workflows/  # GitHub Actions
-```
+`main` 브랜치에 푸시하면 GitHub Actions가 자동으로 빌드 후 GitHub Pages에 배포합니다.
