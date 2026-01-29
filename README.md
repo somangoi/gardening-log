@@ -47,7 +47,7 @@ src/
 ├── components/         # 재사용 컴포넌트
 │   ├── Header.astro
 │   ├── PostCard.astro
-│   └── Garden3D.tsx    # 3D 정원 (React)
+│   └── Garden.tsx      # home
 └── styles/             # 글로벌 스타일
 ```
 
