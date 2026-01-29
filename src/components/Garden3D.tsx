@@ -6,11 +6,6 @@ const INTRO_SECTIONS = ["Hello.", "I'm Somi", "from Seoul.", "I write code."];
 // 메뉴 (작고 하단에 가로로)
 const MENU_ITEMS = ["About", "Blog", "Contact"];
 
-function getRandomChar(): string {
-  // return "·"; // middle dot - 더 섬세한 느낌
-  return "-";
-}
-
 // 텍스트를 화면 너비에 맞게 줄바꿈
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
   const words = text.split(" ");
@@ -164,12 +159,18 @@ export default function Garden3D() {
       // 모든 매트릭스 합치기
       setTextMatrices([...introMatrices, menuMatrix]);
 
-      // 초기 그리드 생성
+      // 초기 그리드 생성 - 평화로운 물결 패턴으로 시작
       const newGrid: string[][] = [];
       for (let y = 0; y < dims.rows; y++) {
         const row: string[] = [];
         for (let x = 0; x < dims.cols; x++) {
-          row.push(getRandomChar());
+          // 동심원 패턴 (젠 정원 모래 무늬)
+          const centerX = dims.cols / 2;
+          const centerY = dims.rows / 2;
+          const distFromCenter = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+          const waveFreq = 8;
+          const wave = Math.sin(distFromCenter / waveFreq) * 0.5 + 0.5;
+          row.push(wave > 0.5 ? "-" : "·");
         }
         newGrid.push(row);
       }
@@ -226,12 +227,16 @@ export default function Garden3D() {
       if (isScrolling && time - lastNoiseTime.current > 50) {
         lastNoiseTime.current = time;
 
+        // 패딩 영역 (처음 15%는 평화로운 물결만)
+        const paddingRatio = 0.15;
+        const contentProgress = Math.max(0, (scrollProgress - paddingRatio) / (1 - paddingRatio));
+
         // 현재 섹션 계산 (소개 4개 + 메뉴 1개 = 5개)
         const totalSections = INTRO_SECTIONS.length + 1;
-        const sectionIndex = Math.min(Math.floor(scrollProgress * totalSections), totalSections - 1);
+        const sectionIndex = Math.min(Math.floor(contentProgress * totalSections), totalSections - 1);
 
         // 섹션 내 진행도 (0-1)
-        const rawSectionProgress = (scrollProgress * totalSections) % 1 || (scrollProgress === 1 ? 1 : 0);
+        const rawSectionProgress = (contentProgress * totalSections) % 1 || (contentProgress === 1 ? 1 : 0);
         const isMenuSection = sectionIndex === INTRO_SECTIONS.length;
 
         // 페이드인/페이드아웃 효과
@@ -252,6 +257,27 @@ export default function Garden3D() {
           } else {
             textVisibility = 1;
           }
+        }
+
+        // 패딩 영역에서는 텍스트 없이 물결만 표시
+        if (scrollProgress < paddingRatio) {
+          const newGrid: string[][] = [];
+          for (let y = 0; y < dimensions.rows; y++) {
+            const row: string[] = [];
+            for (let x = 0; x < dimensions.cols; x++) {
+              // 동심원 패턴 (젠 정원 모래 무늬)
+              const centerX = dimensions.cols / 2;
+              const centerY = dimensions.rows / 2;
+              const distFromCenter = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+              const waveFreq = 8;
+              const wave = Math.sin(distFromCenter / waveFreq) * 0.5 + 0.5;
+              row.push(wave > 0.5 ? "-" : "·");
+            }
+            newGrid.push(row);
+          }
+          setGrid(newGrid);
+          animationRef.current = requestAnimationFrame(animate);
+          return;
         }
 
         const currentMatrix = textMatrices[sectionIndex];
@@ -335,7 +361,7 @@ export default function Garden3D() {
   return (
     <div style={{ position: "relative" }}>
       {/* 스크롤 가능한 높이 확보 */}
-      <div style={{ height: "500vh", width: "100%" }} />
+      <div style={{ height: "800vh", width: "100%" }} />
 
       {/* 고정된 ASCII 디스플레이 */}
       <div
