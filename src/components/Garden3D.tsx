@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
 // 소개 섹션 (크고 중앙에)
-const INTRO_SECTIONS = ["Hello.", "I'm Somi", "from Seoul.", "I write code."];
+const INTRO_SECTIONS = ["Hello.", "I'm Somi.", "I grow code", "like a garden.", "Welcome to", "my zen garden."];
 
 // 메뉴 (작고 하단에 가로로)
 const MENU_ITEMS = ["About", "Blog", "Contact"];
@@ -227,8 +227,8 @@ export default function Garden3D() {
       if (isScrolling && time - lastNoiseTime.current > 50) {
         lastNoiseTime.current = time;
 
-        // 패딩 영역 (처음 15%는 평화로운 물결만)
-        const paddingRatio = 0.15;
+        // 패딩 영역 (처음 5%는 평화로운 물결만)
+        const paddingRatio = 0.05;
         const contentProgress = Math.max(0, (scrollProgress - paddingRatio) / (1 - paddingRatio));
 
         // 현재 섹션 계산 (소개 4개 + 메뉴 1개 = 5개)
@@ -361,7 +361,7 @@ export default function Garden3D() {
   return (
     <div style={{ position: "relative" }}>
       {/* 스크롤 가능한 높이 확보 */}
-      <div style={{ height: "800vh", width: "100%" }} />
+      <div style={{ height: "1200vh", width: "100%" }} />
 
       {/* 고정된 ASCII 디스플레이 */}
       <div
