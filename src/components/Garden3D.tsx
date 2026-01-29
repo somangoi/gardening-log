@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 const INTRO_SECTIONS = ["Hello.", "I'm Somi.", "I grow code", "like a garden.", "Welcome to", "my zen garden."];
 
 // 메뉴 (작고 하단에 가로로)
-const MENU_ITEMS = ["About", "Blog", "Contact"];
+const MENU_ITEMS = ["About", "Posts"];
 
 // 텍스트를 화면 너비에 맞게 줄바꿈
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
@@ -223,8 +223,9 @@ export default function Garden3D() {
     if (dimensions.cols === 0 || textMatrices.length === 0) return;
 
     const animate = (time: number) => {
-      // 스크롤 중일 때만 업데이트 (50ms 간격)
-      if (isScrolling && time - lastNoiseTime.current > 50) {
+      // 스크롤 중이거나 호버 상태 변경 시 업데이트 (50ms 간격)
+      const shouldUpdate = isScrolling;
+      if (shouldUpdate && time - lastNoiseTime.current > 50) {
         lastNoiseTime.current = time;
 
         // 패딩 영역 (처음 5%는 평화로운 물결만)
@@ -395,6 +396,46 @@ export default function Garden3D() {
           </div>
         ))}
       </div>
+
+      {/* 메뉴 오버레이 (호버 감지용) - 메뉴 섹션에서 활성화 */}
+      {scrollProgress > 0.8 && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "80px",
+            zIndex: 10,
+            pointerEvents: "none",
+          }}
+        >
+          {MENU_ITEMS.map((item) => (
+            <a
+              key={item}
+              href={`/${item.toLowerCase()}`}
+              style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: "clamp(1.8rem, 5vw, 2.8rem)",
+                fontWeight: 900,
+                color: "transparent",
+                textDecoration: "none",
+                padding: "3rem 9rem",
+                lineHeight: "1.1",
+                pointerEvents: "auto",
+                cursor: "pointer",
+              }}
+            >
+              {item}
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
