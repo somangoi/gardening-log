@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
-// 각 섹션의 전체 텍스트 (자동 줄바꿈됨)
-const SECTIONS = ["Hello.", "I'm Somi", "from Seoul.", "I write code.", "About me", "My blog", "Contact"];
+// 소개 섹션 (크고 중앙에)
+const INTRO_SECTIONS = ["Hello.", "I'm Somi", "from Seoul.", "I write code."];
+
+// 메뉴 (작고 하단에 가로로)
+const MENU_ITEMS = ["About", "Blog", "Contact"];
 
 function getRandomChar(): string {
   // return "·"; // middle dot - 더 섬세한 느낌
@@ -34,7 +37,8 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number)
 }
 
 // Canvas를 사용해 텍스트를 픽셀 매트릭스로 변환
-function textToMatrix(text: string, cols: number, rows: number): boolean[][] {
+// isMenu: true면 하단에 작게, false면 중앙에 크게
+function textToMatrix(text: string, cols: number, rows: number, isMenu = false): boolean[][] {
   const canvas = document.createElement("canvas");
   // 더 높은 해상도로 렌더링 후 다운샘플링
   const scale = 4;
@@ -49,34 +53,53 @@ function textToMatrix(text: string, cols: number, rows: number): boolean[][] {
 
   // 텍스트 그리기
   ctx.fillStyle = "black";
-  const fontSize = Math.floor(rows * scale * 0.35);
-  ctx.font = `900 ${fontSize}px "Montserrat", sans-serif`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
 
-  const lineHeight = fontSize * 0.85;
+  if (isMenu) {
+    // 메뉴: 세로로 중앙 배치, 큰 폰트
+    const fontSize = Math.floor(rows * scale * 0.25);
+    ctx.font = `900 ${fontSize}px "Montserrat", sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
-  // 가로로 1.3배 늘리기 위해 maxWidth 조정
-  const stretchX = 1.3;
-  const maxWidth = (canvas.width * 0.8) / stretchX;
+    const menuItems = text.split("   ·   ");
+    const lineHeight = fontSize * 1.1;
+    const totalHeight = menuItems.length * lineHeight;
+    const startY = (canvas.height - totalHeight) / 2;
 
-  // 텍스트 자동 줄바꿈
-  const lines = wrapText(ctx, text, maxWidth);
+    menuItems.forEach((item, index) => {
+      ctx.fillText(item, canvas.width / 2, startY + index * lineHeight + lineHeight / 2);
+    });
+  } else {
+    // 소개: 큰 폰트, 중앙 배치
+    const fontSize = Math.floor(rows * scale * 0.35);
+    ctx.font = `900 ${fontSize}px "Montserrat", sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
-  // 전체 텍스트 블록의 높이 계산
-  const totalTextHeight = lines.length * lineHeight;
-  const startY = (canvas.height - totalTextHeight) / 2;
+    const lineHeight = fontSize * 0.85;
 
-  // 가로로 늘려서 중앙에 그리기
-  ctx.save();
-  ctx.setTransform(stretchX, 0, 0, 1, 0, 0);
+    // 가로로 1.3배 늘리기 위해 maxWidth 조정
+    const stretchX = 1.3;
+    const maxWidth = (canvas.width * 0.8) / stretchX;
 
-  lines.forEach((line, index) => {
-    const centerX = canvas.width / 2 / stretchX;
-    ctx.fillText(line, centerX, startY + index * lineHeight + lineHeight / 2);
-  });
+    // 텍스트 자동 줄바꿈
+    const lines = wrapText(ctx, text, maxWidth);
 
-  ctx.restore();
+    // 전체 텍스트 블록의 높이 계산
+    const totalTextHeight = lines.length * lineHeight;
+    const startY = (canvas.height - totalTextHeight) / 2;
+
+    // 가로로 늘려서 중앙에 그리기
+    ctx.save();
+    ctx.setTransform(stretchX, 0, 0, 1, 0, 0);
+
+    lines.forEach((line, index) => {
+      const centerX = canvas.width / 2 / stretchX;
+      ctx.fillText(line, centerX, startY + index * lineHeight + lineHeight / 2);
+    });
+
+    ctx.restore();
+  }
 
   // 픽셀 데이터 추출
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -133,9 +156,13 @@ export default function Garden3D() {
       const dims = calculateDimensions();
       setDimensions(dims);
 
-      // 각 섹션의 텍스트 매트릭스 생성
-      const matrices = SECTIONS.map((section) => textToMatrix(section, dims.cols, dims.rows));
-      setTextMatrices(matrices);
+      // 소개 섹션 매트릭스 생성 (크게)
+      const introMatrices = INTRO_SECTIONS.map((section) => textToMatrix(section, dims.cols, dims.rows, false));
+      // 메뉴 매트릭스 생성 (작게, 하단에 가로로)
+      const menuText = MENU_ITEMS.join("   ·   ");
+      const menuMatrix = textToMatrix(menuText, dims.cols, dims.rows, true);
+      // 모든 매트릭스 합치기
+      setTextMatrices([...introMatrices, menuMatrix]);
 
       // 초기 그리드 생성
       const newGrid: string[][] = [];
@@ -199,26 +226,32 @@ export default function Garden3D() {
       if (isScrolling && time - lastNoiseTime.current > 50) {
         lastNoiseTime.current = time;
 
-        // 현재 섹션 계산 (0-4)
-        const sectionIndex = Math.min(Math.floor(scrollProgress * SECTIONS.length), SECTIONS.length - 1);
+        // 현재 섹션 계산 (소개 4개 + 메뉴 1개 = 5개)
+        const totalSections = INTRO_SECTIONS.length + 1;
+        const sectionIndex = Math.min(Math.floor(scrollProgress * totalSections), totalSections - 1);
 
         // 섹션 내 진행도 (0-1)
-        const rawSectionProgress = (scrollProgress * SECTIONS.length) % 1 || (scrollProgress === 1 ? 1 : 0);
+        const rawSectionProgress = (scrollProgress * totalSections) % 1 || (scrollProgress === 1 ? 1 : 0);
+        const isMenuSection = sectionIndex === INTRO_SECTIONS.length;
 
         // 페이드인/페이드아웃 효과
-        // 0~0.2: 페이드인 (0 → 1)
-        // 0.2~0.8: 안정 (1)
-        // 0.8~1: 페이드아웃 (1 → 0)
         let textVisibility: number;
-        if (rawSectionProgress < 0.2) {
-          // 페이드인: 0에서 시작해서 1로
-          textVisibility = rawSectionProgress / 0.2;
-        } else if (rawSectionProgress > 0.8) {
-          // 페이드아웃: 1에서 시작해서 0으로
-          textVisibility = (1 - rawSectionProgress) / 0.2;
+        if (isMenuSection) {
+          // 메뉴 섹션: 페이드인만, 페이드아웃 없이 유지
+          if (rawSectionProgress < 0.2) {
+            textVisibility = rawSectionProgress / 0.2;
+          } else {
+            textVisibility = 1;
+          }
         } else {
-          // 안정 구간
-          textVisibility = 1;
+          // 소개 섹션: 페이드인/페이드아웃
+          if (rawSectionProgress < 0.2) {
+            textVisibility = rawSectionProgress / 0.2;
+          } else if (rawSectionProgress > 0.8) {
+            textVisibility = (1 - rawSectionProgress) / 0.2;
+          } else {
+            textVisibility = 1;
+          }
         }
 
         const currentMatrix = textMatrices[sectionIndex];
@@ -323,8 +356,8 @@ export default function Garden3D() {
           color: "#1a1a1a",
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
-          justifyContent: "flex-start",
+          alignItems: "center",
+          justifyContent: "center",
           padding: 0,
           margin: 0,
           zIndex: -1,
