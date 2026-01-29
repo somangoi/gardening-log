@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
 // 각 섹션의 전체 텍스트 (자동 줄바꿈됨)
-const SECTIONS = ["Hello.", "I'm Somi.", "I write code.", "About me", "My blog", "Contact"];
+const SECTIONS = ["Hello.", "I'm Somi", "from Seoul.", "I write code.", "About me", "My blog", "Contact"];
 
 function getRandomChar(): string {
   return ".";
@@ -114,10 +114,10 @@ export default function Garden3D() {
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 차원 계산 - 화면을 꽉 채우도록
+  // 차원 계산 - 젠 정원처럼 여유로운 간격
   const calculateDimensions = useCallback(() => {
-    const charWidth = 8.1; // 6.1 + letterSpacing 2px
-    const charHeight = 14;
+    const charWidth = 10; // 중간 간격 (letterSpacing 4px 포함)
+    const charHeight = 16; // 중간 줄 간격
     const cols = Math.ceil(window.innerWidth / charWidth);
     const rows = Math.ceil(window.innerHeight / charHeight);
     return { cols, rows };
@@ -274,9 +274,9 @@ export default function Garden3D() {
           backgroundColor: "#F5F0E6",
           overflow: "hidden",
           fontFamily: "'JetBrains Mono', monospace",
-          fontSize: "10px",
-          lineHeight: "14px",
-          letterSpacing: "2px",
+          fontSize: "11px",
+          lineHeight: "16px",
+          letterSpacing: "4px",
           fontWeight: "bold",
           color: "#1a1a1a",
           display: "flex",
