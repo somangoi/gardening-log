@@ -4,7 +4,8 @@ import { useEffect, useRef, useState, useCallback } from "react";
 const SECTIONS = ["Hello.", "I'm Somi", "from Seoul.", "I write code.", "About me", "My blog", "Contact"];
 
 function getRandomChar(): string {
-  return "·"; // middle dot - 더 섬세한 느낌
+  // return "·"; // middle dot - 더 섬세한 느낌
+  return "-";
 }
 
 // 텍스트를 화면 너비에 맞게 줄바꿈
@@ -50,26 +51,29 @@ function textToMatrix(text: string, cols: number, rows: number): boolean[][] {
   ctx.fillStyle = "black";
   const fontSize = Math.floor(rows * scale * 0.35);
   ctx.font = `900 ${fontSize}px "Montserrat", sans-serif`;
-  ctx.textAlign = "left";
-  ctx.textBaseline = "top";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
 
   const lineHeight = fontSize * 0.85;
-  const paddingLeft = Math.floor(cols * scale * 0.05); // 좌측 여백 5%
-  const paddingTop = Math.floor(rows * scale * 0.05); // 상단 여백 10%
 
   // 가로로 1.3배 늘리기 위해 maxWidth 조정
   const stretchX = 1.3;
-  const maxWidth = (canvas.width - paddingLeft * 2) / stretchX;
+  const maxWidth = (canvas.width * 0.8) / stretchX;
 
   // 텍스트 자동 줄바꿈
   const lines = wrapText(ctx, text, maxWidth);
 
-  // 가로로 늘려서 그리기
+  // 전체 텍스트 블록의 높이 계산
+  const totalTextHeight = lines.length * lineHeight;
+  const startY = (canvas.height - totalTextHeight) / 2;
+
+  // 가로로 늘려서 중앙에 그리기
   ctx.save();
   ctx.setTransform(stretchX, 0, 0, 1, 0, 0);
 
   lines.forEach((line, index) => {
-    ctx.fillText(line, paddingLeft / stretchX, paddingTop + index * lineHeight);
+    const centerX = canvas.width / 2 / stretchX;
+    ctx.fillText(line, centerX, startY + index * lineHeight + lineHeight / 2);
   });
 
   ctx.restore();
@@ -223,21 +227,52 @@ export default function Garden3D() {
           return;
         }
 
+        // 글씨까지의 거리 맵 계산 (blur 효과용)
+        const distanceMap: number[][] = [];
+        const maxBlurDist = Math.floor(15 * (1 - textVisibility) + 1); // visibility 낮을수록 blur 범위 넓음
+
+        for (let y = 0; y < dimensions.rows; y++) {
+          distanceMap[y] = [];
+          for (let x = 0; x < dimensions.cols; x++) {
+            if (currentMatrix[y]?.[x]) {
+              distanceMap[y][x] = 0; // 글씨 픽셀
+            } else {
+              // 주변 글씨 픽셀까지의 최소 거리 계산
+              let minDist = Infinity;
+              for (let dy = -maxBlurDist; dy <= maxBlurDist; dy++) {
+                for (let dx = -maxBlurDist; dx <= maxBlurDist; dx++) {
+                  const ny = y + dy;
+                  const nx = x + dx;
+                  if (ny >= 0 && ny < dimensions.rows && nx >= 0 && nx < dimensions.cols) {
+                    if (currentMatrix[ny]?.[nx]) {
+                      const dist = Math.sqrt(dx * dx + dy * dy);
+                      minDist = Math.min(minDist, dist);
+                    }
+                  }
+                }
+              }
+              distanceMap[y][x] = minDist;
+            }
+          }
+        }
+
         const newGrid: string[][] = [];
         for (let y = 0; y < dimensions.rows; y++) {
           const row: string[] = [];
           for (let x = 0; x < dimensions.cols; x++) {
             const isTextPixel = currentMatrix[y]?.[x] || false;
+            const dist = distanceMap[y][x];
 
             if (isTextPixel) {
+              // 글씨 영역: visibility에 따라 안정화
               const shouldShowStable = Math.random() < textVisibility * 0.8 + 0.2;
-              if (shouldShowStable) {
-                row.push("●"); // 텍스트는 채워진 원
-              } else {
-                row.push("·");
-              }
+              row.push(shouldShowStable ? "S" : "·");
+            } else if (dist < maxBlurDist) {
+              // 글씨 주변: 거리에 따라 글리치 확률 감소
+              const glitchProb = (1 - dist / maxBlurDist) * (1 - textVisibility) * 0.5;
+              const shouldGlitch = Math.random() < glitchProb;
+              row.push(shouldGlitch ? "$" : "·");
             } else {
-              // 배경: 항상 middle dot만 표시
               row.push("·");
             }
           }
@@ -289,7 +324,7 @@ export default function Garden3D() {
         }}
       >
         {grid.map((row, y) => (
-          <div key={y} style={{ whiteSpace: "pre", margin: 0, padding: 0 }}>
+          <div key={y} style={{ whiteSpace: "pre", margin: 0, padding: 0, height: "16px" }}>
             {row.join("")}
           </div>
         ))}
