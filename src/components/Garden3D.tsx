@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 const SECTIONS = ["Hello.", "I'm Somi", "from Seoul.", "I write code.", "About me", "My blog", "Contact"];
 
 function getRandomChar(): string {
-  return ".";
+  return "·"; // middle dot - 더 섬세한 느낌
 }
 
 // 텍스트를 화면 너비에 맞게 줄바꿈
@@ -232,13 +232,13 @@ export default function Garden3D() {
             if (isTextPixel) {
               const shouldShowStable = Math.random() < textVisibility * 0.8 + 0.2;
               if (shouldShowStable) {
-                row.push("#");
+                row.push("●"); // 텍스트는 채워진 원
               } else {
-                row.push(".");
+                row.push("·");
               }
             } else {
-              // 배경: 항상 .만 표시
-              row.push(".");
+              // 배경: 항상 middle dot만 표시
+              row.push("·");
             }
           }
           newGrid.push(row);
