@@ -273,7 +273,14 @@ export default function Garden3D() {
               const shouldGlitch = Math.random() < glitchProb;
               row.push(shouldGlitch ? "$" : "·");
             } else {
-              row.push("·");
+              // 배경: 동심원 패턴 (젠 정원 모래 무늬)
+              const centerX = dimensions.cols / 2;
+              const centerY = dimensions.rows / 2;
+              const distFromCenter = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+              const waveFreq = 8; // 동심원 간격
+              const wave = Math.sin(distFromCenter / waveFreq) * 0.5 + 0.5;
+              // 물결 무늬: - 와 · 를 번갈아 사용
+              row.push(wave > 0.5 ? "-" : "·");
             }
           }
           newGrid.push(row);
